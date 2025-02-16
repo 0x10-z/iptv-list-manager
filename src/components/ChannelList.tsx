@@ -176,9 +176,6 @@ export const ChannelList: React.FC<ChannelListProps> = ({
             group={group}
             channels={groupChannels}
             isExpanded={expandedGroups.includes(group)}
-            isSelected={groupChannels.every((channel) =>
-              selectedChannels.includes(channel.id)
-            )}
             selectedChannels={selectedChannels}
             onToggleGroup={handleToggleGroup}
             onToggleChannel={handleToggleChannel}

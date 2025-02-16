@@ -7,7 +7,6 @@ interface ChannelGroupProps {
   group: string;
   channels: Channel[];
   isExpanded: boolean;
-  isSelected: boolean;
   selectedChannels: string[];
   onToggleGroup: (group: string, isSelected: boolean) => void;
   onToggleChannel: (channelId: string) => void;
@@ -18,7 +17,6 @@ export const ChannelGroup: React.FC<ChannelGroupProps> = ({
   group,
   channels,
   isExpanded,
-  isSelected,
   selectedChannels,
   onToggleGroup,
   onToggleChannel,
