@@ -4,7 +4,7 @@ import { ChannelList } from "./components/ChannelList";
 import type { Channel } from "./types";
 
 function App() {
-  const [channels, setChannels] = useState<Channel[]>([]);
+  const [channels, setChannels] = useState<{ [key: string]: Channel[] }>({});
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
