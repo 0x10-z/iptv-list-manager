@@ -6,3 +6,5 @@ export interface Channel {
   url: string;
   tvgId: string;
 }
+
+export type ChannelsState = { [key: string]: Channel[] }; // Diccionario de grupos de canales
