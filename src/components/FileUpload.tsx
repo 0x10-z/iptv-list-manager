@@ -1,8 +1,13 @@
-import React, { useState, useCallback } from "react";
-import { Channel } from "../types";
+"use client";
+
+import type React from "react";
+import { useState, useCallback } from "react";
+import type { Channel } from "../types";
 
 interface FileUploadProps {
-  setChannels: React.Dispatch<React.SetStateAction<Channel[]>>;
+  setChannels: React.Dispatch<
+    React.SetStateAction<{ [key: string]: Channel[] }>
+  >;
 }
 
 export function FileUpload({ setChannels }: FileUploadProps) {
@@ -13,7 +18,7 @@ export function FileUpload({ setChannels }: FileUploadProps) {
       setIsUploading(true);
       const content = await file.text();
       const lines = content.split("\n");
-      const channels: Channel[] = [];
+      const channelGroups: { [key: string]: Channel[] } = {};
 
       for (let i = 1; i < lines.length; i += 2) {
         if (lines[i].startsWith("#EXTINF")) {
@@ -22,24 +27,33 @@ export function FileUpload({ setChannels }: FileUploadProps) {
           const nameMatch = info.match(/tvg-name="([^"]*)"/);
           const logoMatch = info.match(/tvg-logo="([^"]*)"/);
           const groupMatch = info.match(/group-title="([^"]*)"/);
+          const tvgIdMatch = info.match(/tvg-id="([^"]*)"/);
           const displayNameMatch = info.match(/,(.*)$/);
 
           const name = nameMatch ? nameMatch[1] : "Unknown";
           const displayName = displayNameMatch
             ? displayNameMatch[1].trim()
             : name;
+          const group = groupMatch ? groupMatch[1] : "Uncategorized";
+          const tvgId = tvgIdMatch ? tvgIdMatch[1] : "";
 
-          channels.push({
+          const channel: Channel = {
             id: i.toString(),
             name: displayName,
             logo: logoMatch ? logoMatch[1] : "",
-            group: groupMatch ? groupMatch[1] : "Uncategorized",
+            group: group,
             url: url.trim(),
-          });
+            tvgId: tvgId.trim(),
+          };
+
+          if (!channelGroups[group]) {
+            channelGroups[group] = [];
+          }
+          channelGroups[group].push(channel);
         }
       }
 
-      setChannels(channels);
+      setChannels(channelGroups);
       setIsUploading(false);
     },
     [setChannels]
